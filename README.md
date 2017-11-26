@@ -28,9 +28,17 @@ im- processed Frame from the video
 	- i use an overlap width between 25 and 50
 
 unprocessed image: 
+
 <img src="./unprocessed_image.png" width="640"
       style="margin-left:auto; margin-right:auto; display:block;"/>
 
 processed image:
+
 <img src="./example_frame_processes.png" width="640"
       style="margin-left:auto; margin-right:auto; display:block;"/>
+
+original image:
+
+<img src="./frame.png" width="640"
+      style="margin-left:auto; margin-right:auto; display:block;"/>
+
