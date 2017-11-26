@@ -87,11 +87,11 @@ def createssd (th,im,img,framewidth,frameheight,overlapwidth,tilesize):
 				#higher threashhold will make the program run faster because it is less selective
 
 				if q<900000 and q2<900000 :
-					print q2, q
+					#print q2, q
 					tile (im,img,tilesize,i,j)
 					
 				else:
-					print 0
+					#print 0
 					img=createpatch (im,tilesize,framewidth,frameheight)
 					createssd (th,im,img,framewidth,frameheight,overlapwidth,tilesize)
 
