@@ -8,10 +8,10 @@ from random import randint
 def createpatch (im,tilesize,framewidth,frameheight):
 	
 	#creates a matrix of the same size as the blacked out area
-	img = np.zeros((tilesize,tilesize,3), np.uint8)
+	img=np.zeros((tilesize,tilesize,3), np.uint8)
 	#chooses a random number for the position in which the tile is coming from 
 	randompatchheight=randint(0,frameheight-tilesize)
-	randompatchwidth=  randint(0,framewidth-tilesize) 
+	randompatchwidth=randint(0,framewidth-tilesize)
 
 	check=True
 	#will generate the random tile if there are any pixels that are within the banked out box then it will re
@@ -19,27 +19,24 @@ def createpatch (im,tilesize,framewidth,frameheight):
 	while check==True:
 
 		for i in range(tilesize):
-		    for j in range(tilesize):
-		        img[i, j] = im[ randompatchwidth+ i, randompatchheight+ j] 
+			for j in range(tilesize):
+				img[i,j]=im[randompatchwidth+i,randompatchheight+j]
 
 		i4,i5,i6= np.where(img==(255,255,255)) 
 		i9,i8,i7= np.where(img==(0,0,255)) 
 
-		if len(i4) >0 or len(i7) >0 :
+		if len(i4)>0 or len(i7)>0 :
 			check=True
 			randompatchheight=randint(0,frameheight-tilesize)
-			randompatchwidth=  randint(0,framewidth-tilesize) 
+			randompatchwidth=randint(0,framewidth-tilesize) 
 		else:
 			check=False
 	return img
 
 
-
-
-
 def createssd (th,im,img,framewidth,frameheight,overlapwidth,tilesize):
-	#creating th ssd
-	
+
+	#creating the ssd	
 	ar=[]
 	ov=[]
 	q=0
@@ -52,7 +49,7 @@ def createssd (th,im,img,framewidth,frameheight,overlapwidth,tilesize):
 	for i in range(framewidth):
 		for j in range(frameheight):
 			
-			if  im[ i, j][0] == 255 :
+			if im[i,j][0] == 255 :
 				
 				
 
@@ -61,9 +58,9 @@ def createssd (th,im,img,framewidth,frameheight,overlapwidth,tilesize):
 					for y in range((j+overlapwidth)-j):
 						
 						
-						diffcolory[0]= (im[ i-x, j+y][0]-img[x,y])[0]
-						diffcolory[1]= (im[ i-x, j+y][1]-img[x,y])[1]
-						diffcolory[2]= (im[ i-x, j+y][2]-img[x,y])[2]
+						diffcolory[0]=(im[i-x,j+y][0]-img[x,y])[0]
+						diffcolory[1]=(im[i-x,j+y][1]-img[x,y])[1]
+						diffcolory[2]=(im[i-x,j+y][2]-img[x,y])[2]
 						q+=(diffcolory[0]**2+diffcolory[1]**2+diffcolory[2]**2)**0.5
 						
 						t= (im[ i-x, j+y]-img[x,y])
@@ -74,11 +71,11 @@ def createssd (th,im,img,framewidth,frameheight,overlapwidth,tilesize):
 				for x in range((j+overlapwidth)-j):
 				
 					for y in range(i-(i-tilesize)):
-						diffcolorx[0]= (im[ i+x, j-y][0]-img[x,y])[0]
-						diffcolorx[1]= (im[ i+x, j-y][1]-img[x,y])[1]
-						diffcolorx[2]= (im[ i+x, j-y][2]-img[x,y])[2]
+						diffcolorx[0]=(im[i+x,j-y][0]-img[x,y])[0]
+						diffcolorx[1]=(im[i+x,j-y][1]-img[x,y])[1]
+						diffcolorx[2]=(im[i+x,j-y][2]-img[x,y])[2]
 
-						tr= (im[ i-x, j+y]-img[x,y])
+						tr=(im[i-x,j+y]-img[x,y])
 						q2+=(diffcolorx[0]**2+diffcolorx[1]**2+diffcolorx[2]**2)**0.5
 						
 					
@@ -97,8 +94,7 @@ def createssd (th,im,img,framewidth,frameheight,overlapwidth,tilesize):
 					print 0
 					img=createpatch (im,tilesize,framewidth,frameheight)
 					createssd (th,im,img,framewidth,frameheight,overlapwidth,tilesize)
-				
-				
+
 
 def tile (im,img,tilesize,i,j):
 	
@@ -106,7 +102,7 @@ def tile (im,img,tilesize,i,j):
 		row=[]
 		ovrow=[]
 		for y in range(tilesize):
-			im[ i+x, j+y]=img[x,y]
+			im[i+x,j+y]=img[x,y]
 
 '''
 #im = the frame gotten from the video
@@ -124,13 +120,9 @@ def tile (im,img,tilesize,i,j):
 	the frame size
 	- if the size is too small then it will take a long time to run
 #overlapwidth= the amount of overlap between the frame and the tile when checking the similarity between the 
-neighboring fames
-
-
-
-
-
+neighboring frames
 '''
+
 def processimage (im,framewidth,frameheight,tilesize,overlapwidth):
 	img=createpatch (im,tilesize,framewidth,frameheight)
 	createssd (0,im,img,framewidth,frameheight,overlapwidth,tilesize)

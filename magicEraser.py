@@ -7,10 +7,10 @@ Date: November 28th, 2017 (2017/11/28)
 Revision 1
 '''
 
-
+import cv2
+import imageTiling
 import numpy as np
 import os
-import cv2
 
 
 def magicEraser(videoFile):
@@ -22,8 +22,8 @@ def magicEraser(videoFile):
     # Read the first frame from the video feed and develop the height and width boundaries for a frame
     vid_frameInBuffer, frame_Image = vid_capture.read()
 
-    frame_height = frame_Image.shape[0]
-    frame_width = frame_Image.shape[1]
+    frame_height = frame_Image.shape[0]  # Normally 240
+    frame_width = frame_Image.shape[1]   # Normally 320
 
     while vid_capture.isOpened():
 
@@ -37,22 +37,22 @@ def magicEraser(videoFile):
 
             # Generate occlusion mask for marker text for each frame of the source video frame
             # Find the "x" coordinate of the marker tip
-            frame_erasedImage = eraseTextWithMask(frame_HSVImage)
+            frame_blankedImage = eraseTextWithMask(frame_HSVImage)
 
-            # ***
-            # Lauren's function goes here, takes frame_Image as an input, kicks out final processed image
-            # ***
+            # For the blanked image, call imageTiling in order to fill in the blank spaces
+            frame_erasedImage = imageTiling.processimage(frame_blankedImage, frame_width, frame_height, tilesize=100, overlapwidth=35)
 
-            # DEBUG - delete me when finished debugging
+            # DEBUG
             # Display source image and HSV-Space image in horizontal stack
-            imageArray = np.hstack((frame_erasedImage, frame_HSVImage))
+            imageArray = np.hstack((frame_Image, frame_blankedImage, frame_erasedImage, frame_HSVImage))
 
             cv2.imshow("Images", imageArray)
-            # END DEBUG
 
             # Kill image viewer when reading a "q" keypress
             if cv2.waitKey(0) & 0xFF == ord('q'):
                 continue
+            # END DEBUG
+
         else:
             break
 
