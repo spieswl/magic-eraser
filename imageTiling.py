@@ -25,7 +25,7 @@ def createpatch (im,tilesize,framewidth,frameheight):
 		i4,i5,i6=np.where(img==(255,255,255))
 		i9,i8,i7=np.where(img==(0,0,255))
 
-		if len(i4)>0 or len(i7)>0 :
+		if len(i4)>0 or len(i7)>0:
 			check=True
 			randompatchheight=randint(0,frameheight-tilesize)
 			randompatchwidth=randint(0,framewidth-tilesize) 
@@ -49,7 +49,7 @@ def createssd (th,im,img,framewidth,frameheight,overlapwidth,tilesize):
 	for i in range(framewidth):
 		for j in range(frameheight):
 			
-			if im[i,j][0] == 255 :
+			if im[i,j][0] == 255 and im[i,j][1] == 255 and im[i,j][2] == 255 :
 				
 				
 
@@ -82,12 +82,12 @@ def createssd (th,im,img,framewidth,frameheight,overlapwidth,tilesize):
 				
 				#if the ssd is in the appropriate range then the tile will be added
 
-				#choose q and q2 values between 1.2M to 1.5M these are the threshholds
+				#choose q and q2 values between 1M to .9M these are the threshholds
 				#the lower threashhold will make the prgram run slower because it becomes more selective
 				#higher threashhold will make the program run faster because it is less selective
 
-				if q<1500000 and q2<1300000 :
-					print q2
+				if q<900000 and q2<900000 :
+					print q2, q
 					tile (im,img,tilesize,i,j)
 					
 				else:
@@ -108,7 +108,7 @@ def tile (im,img,tilesize,i,j):
 #im = the frame gotten from the video
 	- the area that you want to be tiled over needs to be of color (255,255,255)
 	- the pen and the graphical error at the bottom of the frames should be overlayed with the color 
-	(125,0,0) otherwise tile samples with portions of these can be used to fill in the blank area
+	(0,0,255) otherwise tile samples with portions of these can be used to fill in the blank area
 
 #framewidth= the width in pixels of the frame
 
