@@ -1,12 +1,12 @@
 # eecs432_magic-eraser
 "Magic Eraser" final project, co-authored by Lauren Hutson and William Spies, MSR 2017-2018 Cohort at Northwestern University 
 
-#Instructions on how to use tiling function
+# Instructions on how to use tiling function
 ----------------
-###Function call : 
+### Function call : 
 processimage (im,framewidth,frameheight,tilesize,overlapwidth)
 ----------------
-###Returns: 
+### Returns: 
 im- processed Frame from the video 
 ----------------
 
