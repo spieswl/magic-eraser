@@ -19,32 +19,33 @@ def magicEraser(videoFile):
     vid_path = os.path.dirname(os.path.abspath(__file__)) + "/" + videoFile
     vid_capture = cv2.VideoCapture(vid_path)
 
-    # Read the first frame from the video feed and develop the height and width boundaries for a frame
+    # Read all successive frames from the video feed
     vid_frameInBuffer, frame_Image = vid_capture.read()
 
-    frame_height = frame_Image.shape[0]  # Normally 240
-    frame_width = frame_Image.shape[1]   # Normally 320
+    # Define frame height and width boundaries
+    frame_height = frame_Image.shape[0]
+    frame_width = frame_Image.shape[1]
 
     while vid_capture.isOpened():
 
         # Read all successive frames from the video feed
-        vid_frameInBuffer, frame_Image = vid_capture.read()
+        vid_frameInBuffer, frame_origImage = vid_capture.read()
 
         if vid_frameInBuffer == True:
 
             ## Change video frame to HSV color space
-            frame_HSVImage = cv2.cvtColor(frame_Image, cv2.COLOR_BGR2HSV)
+            frame_HSVImage = cv2.cvtColor(frame_origImage, cv2.COLOR_BGR2HSV)
 
             # Generate occlusion mask for marker text for each frame of the source video frame
             # Find the "x" coordinate of the marker tip
-            frame_blankedImage = eraseTextWithMask(frame_HSVImage)
+            frame_blankedImage = eraseTextWithMask(frame_origImage, frame_HSVImage)
 
             # For the blanked image, call imageTiling in order to fill in the blank spaces
-            frame_erasedImage = imageTiling.processimage(frame_blankedImage, frame_width, frame_height, tilesize=100, overlapwidth=35)
+            frame_erasedImage = imageTiling.processimage(frame_blankedImage, frame_height, frame_width, tilesize=100, overlapwidth=25)
 
             # DEBUG
-            # Display source image and HSV-Space image in horizontal stack
-            imageArray = np.hstack((frame_Image, frame_blankedImage, frame_erasedImage, frame_HSVImage))
+            # Display source image, blanked image, and HSV-Space image in horizontal stack
+            imageArray = np.hstack((frame_origImage, frame_blankedImage, frame_erasedImage))
 
             cv2.imshow("Images", imageArray)
 
@@ -63,7 +64,10 @@ def magicEraser(videoFile):
     return
 
 
-def eraseTextWithMask(frame_Image):
+def eraseTextWithMask(frame_source, frame_HSVImage):
+
+    # Local copy of source image
+    frame_Image = frame_source.copy()
 
     # Define frame height and width boundaries
     frame_height = frame_Image.shape[0]
@@ -78,7 +82,7 @@ def eraseTextWithMask(frame_Image):
     mask_redUpperBound = np.array([26,255,255])
 
     # Use OpenCV function to generate red image mask
-    frame_redMask = cv2.inRange(frame_Image, mask_redLowerBound, mask_redUpperBound)
+    frame_redMask = cv2.inRange(frame_HSVImage, mask_redLowerBound, mask_redUpperBound)
 
     # Erode and dilate the text mask until general enough to cover the marker text
     frame_erodedMask = cv2.erode(frame_redMask, kernel, iterations=1)
