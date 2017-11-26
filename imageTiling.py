@@ -22,8 +22,8 @@ def createpatch (im,tilesize,framewidth,frameheight):
 			for j in range(tilesize):
 				img[i,j]=im[randompatchwidth+i,randompatchheight+j]
 
-		i4,i5,i6= np.where(img==(255,255,255)) 
-		i9,i8,i7= np.where(img==(0,0,255)) 
+		i4,i5,i6=np.where(img==(255,255,255))
+		i9,i8,i7=np.where(img==(0,0,255))
 
 		if len(i4)>0 or len(i7)>0 :
 			check=True
