@@ -163,9 +163,9 @@ neighboring fames
 def processimage (im,framewidth,frameheight,tilesize,overlapwidth):
 	img=createpatch (im,tilesize,framewidth,frameheight)
 	createssd (0,im,img,framewidth,frameheight,overlapwidth,tilesize)
-	
-	plt.imshow(im)
-	plt.show()
+	return im
+	#plt.imshow(im)
+	#plt.show()
 
 
 '''
