@@ -24,6 +24,7 @@ def magicEraser(videoFile):
 
     frame_height = frame_Image.shape[0]  # Normally 240
     frame_width = frame_Image.shape[1]   # Normally 320
+    
 
     while vid_capture.isOpened():
 
@@ -40,7 +41,7 @@ def magicEraser(videoFile):
             frame_blankedImage = eraseTextWithMask(frame_HSVImage)
 
             # For the blanked image, call imageTiling in order to fill in the blank spaces
-            frame_erasedImage = imageTiling.processimage(frame_blankedImage, frame_width, frame_height, tilesize=100, overlapwidth=35)
+            frame_erasedImage = imageTiling.processimage(frame_blankedImage,frame_height, frame_width, tilesize=10, overlapwidth=5)
 
             # DEBUG
             # Display source image and HSV-Space image in horizontal stack
