@@ -1,6 +1,7 @@
 # eecs432_magic-eraser
 "Magic Eraser" final project, co-authored by Lauren Hutson and William Spies, MSR 2017-2018 Cohort at Northwestern University 
 
+### Created a new branch take a look at it for the error fixes i made
 
 # Instructions on how to use tiling function
 ----------------
