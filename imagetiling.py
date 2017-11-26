@@ -57,8 +57,7 @@ def createssd (th,im,img,framewidth,frameheight,overlapwidth,tilesize):
 				
 
 				for x in range(i-(i-tilesize)):
-					#row=[]
-					#ovrow=[]
+				
 					for y in range((j+overlapwidth)-j):
 						
 						
@@ -68,19 +67,12 @@ def createssd (th,im,img,framewidth,frameheight,overlapwidth,tilesize):
 						q+=(diffcolory[0]**2+diffcolory[1]**2+diffcolory[2]**2)**0.5
 						
 						t= (im[ i-x, j+y]-img[x,y])
-						#print img[x,y],im[ i-x, j+y],t,q
-
-						
-						#row.append((diffcolory[0]**2,diffcolory[1]**2,diffcolory[2]**2)) 
-						#ovrow.append(t)
-					#ar.append(row)
-					#ov.append(ovrow)
+					
 				
 				#will check the ssd of the pixels on the upper edge of the space to fill in
 
 				for x in range((j+overlapwidth)-j):
-					#row=[]
-					#ovrow=[]
+				
 					for y in range(i-(i-tilesize)):
 						diffcolorx[0]= (im[ i+x, j-y][0]-img[x,y])[0]
 						diffcolorx[1]= (im[ i+x, j-y][1]-img[x,y])[1]
@@ -88,21 +80,8 @@ def createssd (th,im,img,framewidth,frameheight,overlapwidth,tilesize):
 
 						tr= (im[ i-x, j+y]-img[x,y])
 						q2+=(diffcolorx[0]**2+diffcolorx[1]**2+diffcolorx[2]**2)**0.5
-						#print q2
-						#row.append((diffcolorx[0]**2,diffcolorx[1]**2,diffcolorx[2]**2)) 
-						#ovrow.append(tr)
-					#ar.append(row)
-					#ov.append(ovrow)
+						
 					
-					
-				
-
-				#plt.imshow(ar) #overlap area
-				#plt.show()
-
-				#plt.imshow(img) #sample
-				#plt.show()
-
 				
 				#if the ssd is in the appropriate range then the tile will be added
 
@@ -113,15 +92,7 @@ def createssd (th,im,img,framewidth,frameheight,overlapwidth,tilesize):
 				if q<1500000 and q2<1300000 :
 					print q2
 					tile (im,img,tilesize,i,j)
-					'''
-					plt.imshow(im)
-					plt.show()
 					
-					plt.imshow(ov) #overlap area
-					plt.show()'''
-
-					#plt.imshow(ar) #overlap area
-					#plt.show()
 				else:
 					print 0
 					img=createpatch (im,tilesize,framewidth,frameheight)
@@ -166,38 +137,3 @@ def processimage (im,framewidth,frameheight,tilesize,overlapwidth):
 	return im
 	#plt.imshow(im)
 	#plt.show()
-
-
-
-def main():
-	im=cv2.imread('frame.png')
-	image_size=im.size
-
-	#will put a balack box over the words
-	#					x      y
-	cv2.rectangle( im,( 1200, 300 ), (200,600), ( 255, 255, 255 ), -1, 8 )
-	cv2.rectangle( im,( 925, 250 ), (800,0), ( 0, 0, 255 ), -1, 8 )
-	cv2.rectangle( im,( 0, 1300 ), (1400,950), ( 0, 0, 255 ), -1, 8 )
-
-	framewidth=im.shape[0]
-	frameheight=im.shape[1]
-	tilesize=100
-	overlapwidth=25
-	
-	
-	processimage(im,framewidth,frameheight,tilesize,overlapwidth)
-	plt.imshow(im)
-	plt.show()
-	
-	#plt.imshow(ov) #overlap area
-	#plt.show()
-
-	#plt.imshow(img) #sample
-	#plt.show()
-	
-
-if __name__ == '__main__':
-	main()
-
-
-
