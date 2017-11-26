@@ -25,3 +25,11 @@ im- processed Frame from the video
 	the frame size
 	- if the size is too small then it will take a long time to run
 5) overlapwidth= the amount of overlap between the frame and the tile when checking the similarity between the neighboring fames
+
+unprocessed image: 
+<img src="./unprocessed_image.png" width="640"
+      style="margin-left:auto; margin-right:auto; display:block;"/>
+
+processed image:
+<img src="./example_frame_processed_image.png" width="640"
+      style="margin-left:auto; margin-right:auto; display:block;"/>
