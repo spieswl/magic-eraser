@@ -23,7 +23,7 @@ def createpatch (im,tilesize,framewidth,frameheight):
 		        img[i, j] = im[ randompatchwidth+ i, randompatchheight+ j] 
 
 		i4,i5,i6= np.where(img==(255,255,255)) 
-		i7,i8,i9= np.where(img==(125,0,0)) 
+		i9,i8,i7= np.where(img==(0,0,255)) 
 
 		if len(i4) >0 or len(i7) >0 :
 			check=True
@@ -168,7 +168,7 @@ def processimage (im,framewidth,frameheight,tilesize,overlapwidth):
 	#plt.show()
 
 
-'''
+
 def main():
 	im=cv2.imread('frame.png')
 	image_size=im.size
@@ -176,8 +176,8 @@ def main():
 	#will put a balack box over the words
 	#					x      y
 	cv2.rectangle( im,( 1200, 300 ), (200,600), ( 255, 255, 255 ), -1, 8 )
-	cv2.rectangle( im,( 925, 250 ), (800,0), ( 125, 0, 0 ), -1, 8 )
-	cv2.rectangle( im,( 0, 1300 ), (1400,950), ( 125, 0, 0 ), -1, 8 )
+	cv2.rectangle( im,( 925, 250 ), (800,0), ( 0, 0, 255 ), -1, 8 )
+	cv2.rectangle( im,( 0, 1300 ), (1400,950), ( 0, 0, 255 ), -1, 8 )
 
 	framewidth=im.shape[0]
 	frameheight=im.shape[1]
@@ -185,7 +185,7 @@ def main():
 	overlapwidth=25
 	
 	
-	#processimage(im,framewidth,frameheight,tilesize,overlapwidth)
+	processimage(im,framewidth,frameheight,tilesize,overlapwidth)
 	plt.imshow(im)
 	plt.show()
 	
@@ -198,6 +198,6 @@ def main():
 
 if __name__ == '__main__':
 	main()
-'''
+
 
 

@@ -13,7 +13,7 @@ im- processed Frame from the video
 1) im = the frame gotten from the video
 	- the area that you want to be tiled over needs to be of color (255,255,255)
 	- the pen and the graphical error at the bottom of the frames should be overlayed with the color 
-	(125,0,0) otherwise tile samples with portions of these can be used to fill in the blank area
+	(0,0,255) otherwise tile samples with portions of these can be used to fill in the blank area
 
 2) framewidth= the width in pixels of the frame
 
