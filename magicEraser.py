@@ -4,7 +4,7 @@
 EECS432 - Introduction to Computer Vision
 Author: Lauren Hutson & William Spies
 Date: November 28th, 2017 (2017/11/28)
-Revision 1
+Revision 2
 '''
 
 import cv2
@@ -31,6 +31,13 @@ def magicEraser(videoFile):
     mask_Text = developTextMask(frame_firstHSVImage)
     mask_TextInv = cv2.bitwise_not(mask_Text)
 
+    # Pass masked image with occluded areas to imageTiling function
+    frame_preTiledImage = tilingMaskSetup(frame_firstImage, mask_Text)
+    frame_postTiledImage = imageTiling.processimage(frame_preTiledImage.copy(), frame_height, frame_width, tilesize=22, overlapwidth=5)
+
+    # Extract the post-tiled image only in the area defined by the text mask
+    frame_TileMask = cv2.bitwise_and(frame_postTiledImage, frame_postTiledImage, mask=mask_Text)
+
     # ////////////////////  Main image processing loop  ////////////////////
     while vid_capture.isOpened():
 
@@ -43,24 +50,13 @@ def magicEraser(videoFile):
             frame_HSVImage = cv2.cvtColor(frame_baseImage, cv2.COLOR_BGR2HSV)
 
             # Find the "x" coordinate of the marker tip
-            # Use the mask to occlude the red text based on marker tip position
-            frame_blankedImage = eraseTextWithMask(frame_baseImage.copy(), frame_HSVImage, mask_Text)
+            # Replace the red text based on marker tip position with the tiled replacement mask
+            frame_erasedImage = eraseTextWithMask(frame_baseImage.copy(), frame_HSVImage, mask_Text, frame_TileMask)
 
-            # For the blanked image, call imageTiling in order to fill in the blank spaces
-            frame_erasedImage = imageTiling.processimage(frame_blankedImage.copy(), frame_height, frame_width, tilesize=20, overlapwidth=10)
-
-            # Restore the pieces of the image removed for artifact or tiling reasons
-            frame_resPt1 = cv2.bitwise_and(frame_baseImage, frame_baseImage, mask = mask_TextInv)
-            frame_resPt2 = cv2.bitwise_or(frame_resPt1, frame_erasedImage, mask = mask_Text)
-            frame_restoredImage = cv2.bitwise_or(frame_resPt1, frame_resPt2)
-
-            # DEBUG
             # Display source image, blanked image, and HSV-Space image in horizontal stack
-            imageArray = np.hstack((frame_baseImage, frame_blankedImage, frame_erasedImage, frame_restoredImage))
-
+            imageArray = np.hstack((frame_baseImage, frame_erasedImage))
             cv2.imshow("Images", imageArray)
             cv2.waitKey(1)
-            # END DEBUG
 
         else:
             break
@@ -105,7 +101,7 @@ def developTextMask(frame_HSVImage):
     return mask_dilated
 
 
-def eraseTextWithMask(frame_BGR, frame_HSV, mask):
+def eraseTextWithMask(frame_BGR, frame_HSV, mask, replacementTexture):
 
     # Define frame height and width boundaries
     frame_height = frame_BGR.shape[0]  # Nominally 240
@@ -147,16 +143,37 @@ def eraseTextWithMask(frame_BGR, frame_HSV, mask):
     for m in range(frame_height):
         for n in range(frame_width):
 
+            # Replace all text to the right of the marker tip with the white "screen"
+            if n >= frame_wandXCoord and mask[m][n] == 255:
+                frame_BGR[m][n] = replacementTexture[m][n]
+
+    return frame_BGR
+
+
+def tilingMaskSetup(frame_BGR, mask):
+
+    # Define frame height and width boundaries
+    frame_height = frame_BGR.shape[0]  # Nominally 240
+    frame_width = frame_BGR.shape[1]   # Nominally 320
+
+    # Set up occlusion masks for important areas to ignore as part of the texture tiling setup
+    for m in range(frame_height):
+        for n in range(frame_width):
+
             # Obscure the body of the marker
-            if 0 <= m <= 60 and (frame_wandXCoord - 10) <= n <= (frame_wandXCoord + 30):
+            if 0 <= m <= 60 and (255 <= n <= 295):
                 frame_BGR[m][n] = [255, 0, 0]
 
             # Obscure the heavily scrambled region at the bottom of the video
             if m >= 220:
                 frame_BGR[m][n] = [255, 0, 0]
 
-            # Replace all text to the right of the marker tip with the white "screen"
-            if n >= frame_wandXCoord and mask[m][n] == 255:
+            # Obscure the sides (blank margins) of the image
+            if n < 14 or n > 310:
+                frame_BGR[m][n] = [255, 0, 0]
+
+            # Replace all masked text with the white "screen"
+            if mask[m][n] == 255:
                 frame_BGR[m][n] = [255, 255, 255]
 
     return frame_BGR
