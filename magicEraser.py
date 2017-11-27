@@ -29,7 +29,6 @@ def magicEraser(videoFile):
 
     # Develop mask (and inverse mask) of red text based on first video frame
     mask_Text = developTextMask(frame_firstHSVImage)
-    mask_TextInv = cv2.bitwise_not(mask_Text)
 
     # Pass masked image with occluded areas to imageTiling function
     frame_preTiledImage = tilingMaskSetup(frame_firstImage, mask_Text)
