@@ -34,6 +34,11 @@ def magicEraser(videoFile):
     frame_preTiledImage = tilingMaskSetup(frame_firstImage, mask_Text)
     frame_postTiledImage = imageTiling.processimage(frame_preTiledImage.copy(), frame_height, frame_width, tilesize=22, overlapwidth=5)
 
+    # DEBUG
+    cv2.imshow("Images", frame_preTiledImage)
+    cv2.waitKey(0)
+    # END DEBUG
+
     # Extract the post-tiled image only in the area defined by the text mask
     frame_TileMask = cv2.bitwise_and(frame_postTiledImage, frame_postTiledImage, mask=mask_Text)
 
