@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 
 '''
-EECS432 - Introduction to Computer Vision
-Author: Lauren Hutson & William Spies
-Date: November 28th, 2017 (2017/11/28)
-Revision 2
+"Magic Eraser" Computer Vision Project
+Authors: Lauren Hutson & William Spies
+Date: December 16th, 2017 (2017/12/16)
+Revision 3
 '''
 
 import cv2
 import imageTiling
 import numpy as np
 import os
+import sys
 
 
 def magicEraser(videoFile):
@@ -33,11 +34,6 @@ def magicEraser(videoFile):
     # Pass masked image with occluded areas to imageTiling function
     frame_preTiledImage = tilingMaskSetup(frame_firstImage, mask_Text)
     frame_postTiledImage = imageTiling.processimage(frame_preTiledImage.copy(), frame_height, frame_width, tilesize=22, overlapwidth=5)
-
-    # DEBUG
-    cv2.imshow("Images", frame_preTiledImage)
-    cv2.waitKey(0)
-    # END DEBUG
 
     # Extract the post-tiled image only in the area defined by the text mask
     frame_TileMask = cv2.bitwise_and(frame_postTiledImage, frame_postTiledImage, mask=mask_Text)
@@ -77,11 +73,10 @@ def magicEraser(videoFile):
 
 def developTextMask(frame_HSVImage):
 
-    # Define frame height and width boundaries
+    # Define frame height boundaries
     frame_height = frame_HSVImage.shape[0]  # Nominally 240
-    frame_width = frame_HSVImage.shape[1]   # Nominally 320
 
-    # Initialize important mask variables
+    # Initialize kernel for morphological operations
     kernel = np.ones((3,3), np.uint8)
 
     # HSV boundary ranges for "Red" (NOTE: Slightly different than marker tip boundary values)
@@ -181,3 +176,33 @@ def tilingMaskSetup(frame_BGR, mask):
                 frame_BGR[m][n] = [255, 255, 255]
 
     return frame_BGR
+
+
+################################################################################
+
+def main():
+
+    print "Welcome to the 'Magic' Eraser program!" + "\n"
+
+    while (True):
+        # Get path to the video file to be parsed
+        if (sys.version_info[0] > 2):
+            filePath = input("Please enter the filename (local folder only, please) for the video to be parsed, or type 'quit' to exit: ")
+        else:
+            filePath = raw_input("Please enter the filename (local folder only, please) for the video to be parsed, or type 'quit' to exit: ")
+
+        # If the file path is "quit", immediately return from the main function; else, continue with parsing the file
+        if (filePath == "quit"):
+            print "\n" + "Goodbye!"
+            return 0
+        else:
+            magicEraser(filePath)
+            print "\n" + "Video modification complete." + "\n"
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        print "Program terminated by user." + "\n"
+        sys.exit(0)
