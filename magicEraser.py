@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 '''
-"Magic Eraser" Computer Vision Project
-Authors: Lauren Hutson & William Spies
+"Magic Eraser" Computer Vision Project - Main function
+Author: William Spies
 Date: December 16th, 2017 (2017/12/16)
 Revision 3
 '''
@@ -33,7 +33,7 @@ def magicEraser(videoFile):
 
     # Pass masked image with occluded areas to imageTiling function
     frame_preTiledImage = tilingMaskSetup(frame_firstImage, mask_Text)
-    frame_postTiledImage = imageTiling.processimage(frame_preTiledImage.copy(), frame_height, frame_width, tilesize=22, overlapwidth=5)
+    frame_postTiledImage = imageTiling.process_image(frame_preTiledImage.copy(), frame_height, frame_width, tile_size=22, overlap_width=5)
 
     # Extract the post-tiled image only in the area defined by the text mask
     frame_TileMask = cv2.bitwise_and(frame_postTiledImage, frame_postTiledImage, mask=mask_Text)
@@ -204,5 +204,5 @@ if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        print "Program terminated by user." + "\n"
+        print "\n" + "Program terminated by user." + "\n"
         sys.exit(0)
