@@ -100,7 +100,7 @@ def developTextMask(frame_HSVImage):
     return mask_dilated
 
 
-def eraseTextWithMask(frame_BGR, frame_HSV, mask, replacementTexture):
+def eraseTextWithMask(frame_BGR, frame_HSV, mask, replacement_texture):
 
     # Define frame height and width boundaries
     frame_height = frame_BGR.shape[0]  # Nominally 240
@@ -144,7 +144,7 @@ def eraseTextWithMask(frame_BGR, frame_HSV, mask, replacementTexture):
 
             # Replace all text to the right of the marker tip with the white "screen"
             if n >= frame_wandXCoord and mask[m][n] == 255:
-                frame_BGR[m][n] = replacementTexture[m][n]
+                frame_BGR[m][n] = replacement_texture[m][n]
 
     return frame_BGR
 
